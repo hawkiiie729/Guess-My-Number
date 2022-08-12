@@ -1,20 +1,70 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, ImageBackground, SafeAreaView } from "react-native";
+import StartGameScreen from "./Screens/StartGameScreen";
+import { LinearGradient } from "expo-linear-gradient";
+import { useState } from "react";
+import GameScreen from "./Screens/GameScreen";
+import Colors from "./Constants/Color";
+import GameOverScreen from "./Screens/GameOverScreen";
+import {useFonts} from 'expo-font'
+import AppLoading from "expo-app-loading"; 
+
 
 export default function App() {
+  const [userNumber, setUserNumber] = useState();
+  const [gameIsOver, setGameIsOver] = useState(true);
+
+  const [fontsLoaded]=useFonts({
+    'open-sans':require('./assets/Fonts/OpenSans-Regular.ttf'),
+    'open-sans-bold':require('./assets/Fonts/OpenSans-Bold.ttf'),
+    
+  })
+
+  if(!fontsLoaded){
+    return <AppLoading/>
+  }
+
+  const pickNumberHandler = (pickedNumber) => {
+    setUserNumber(pickedNumber);
+    setGameIsOver(false)
+  };
+
+  const gameOverHandler=()=>{
+    setGameIsOver(true);
+  }
+
+  let screen = <StartGameScreen onPickNumber={pickNumberHandler} />;
+
+  if (userNumber) {
+    screen = <GameScreen userNumber={userNumber} onGameOver={gameOverHandler}/>;
+  }
+
+if(gameIsOver===true && userNumber){
+  screen=<GameOverScreen/>
+}
+
+
   return (
-    <View style={styles.container}>
-      <Text>Hello World!!!!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <LinearGradient
+      colors={[Colors.primary700, Colors.accent500]}
+      style={styles.rootScreen}
+    >
+      <ImageBackground
+        source={require("./assets/bgimg.png")}
+        resizeMode="cover"
+        style={styles.rootScreen}
+        imageStyle={styles.imageBackground}
+      >
+        <SafeAreaView style={styles.rootScreen}>{screen}</SafeAreaView>
+      </ImageBackground>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  rootScreen: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+  },
+  imageBackground: {
+    opacity: 0.15,
   },
 });
