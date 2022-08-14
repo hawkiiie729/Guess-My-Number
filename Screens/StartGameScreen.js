@@ -62,7 +62,7 @@ const StartGameScreen = ({onPickNumber}) => {
 
   return (
     <View style={styles.rootContainer}>
-      <Title>Guess My Number</Title>
+      <Title>Guess My Number?</Title>
     <Card>
      <InstructionText>Enter a Number</InstructionText>
       <TextInput
